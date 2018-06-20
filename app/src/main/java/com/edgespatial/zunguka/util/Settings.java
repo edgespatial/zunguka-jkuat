@@ -1,20 +1,26 @@
 package com.edgespatial.zunguka.util;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import com.mg.surblime.util.Tools;
 
 /**
  * Created by moses on 6/20/18.
  */
 
 public class Settings {
+    private static final String PREFERENCE_SATTELITE_MAP_STYLE = "satellite_map_style";
 
-    public static SharedPreferences getSharedPreferences(Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
+    public static void setSatelliteMapStyle(Context context, boolean satellite) {
+        Tools.getSharedPreferences(context)
+                .edit()
+                .putBoolean(PREFERENCE_SATTELITE_MAP_STYLE, satellite)
+                .apply();
     }
 
-    public static SharedPreferences.Editor editShardPreferences(Context context) {
-        return getSharedPreferences(context).edit();
+
+    public static boolean isSatelliteMapStyle(Context context) {
+        return Tools.getSharedPreferences(context)
+                .getBoolean(PREFERENCE_SATTELITE_MAP_STYLE, false);
     }
 }

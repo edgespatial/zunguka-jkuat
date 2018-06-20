@@ -36,6 +36,12 @@
                 android:icon="@drawable/theme"
                 android:title="@string/dark_theme"
                 app:actionViewClass="android.support.v7.widget.SwitchCompat" />
+
+            <item
+                android:id="@+id/nav_satellite"
+                android:icon="@drawable/satellite"
+                android:title="@string/satellite"
+                app:actionViewClass="android.support.v7.widget.SwitchCompat" />
         </menu>
     </item>
 </menu>

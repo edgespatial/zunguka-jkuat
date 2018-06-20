@@ -18,4 +18,5 @@
     <string name="location_longitude">37.012402</string>
     <string name="map_box_access_token">pk.eyJ1IjoiZ2l0YXVtb3NlczQiLCJhIjoiY2pjOWdhODg4MG9kYzJ3bzR0eHE0ZXVodyJ9.zU1cfiq9SWoVsTaPdoFnBQ</string>
     <string name="more">More</string>
+    <string name="satellite">Satellite Map</string>
 </resources>

@@ -4,22 +4,30 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SwitchCompat;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.edgespatial.zunguka.R;
+import com.edgespatial.zunguka.util.MapTools;
+import com.edgespatial.zunguka.util.Settings;
+import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mg.surblime.activities.DrawerActivity;
+import com.mg.surblime.util.Tools;
 
 public class MainActivity extends DrawerActivity implements OnMapReadyCallback, DrawerLayout.DrawerListener {
 
 
     private MapView mapView;
     private FloatingSearchView floatingSearchView;
+    private MapTools mapTools;
 
 
     @Override
@@ -45,6 +53,20 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
         });
 
         getDrawer().addDrawerListener(this);
+        initializeSatelliteSwitch();
+    }
+
+    private void initializeSatelliteSwitch() {
+        MenuItem darkThemeSwitch = ((NavigationView) findViewById(navigationViewId())).getMenu().findItem(R.id.nav_satellite);
+        SwitchCompat switchCompat = (SwitchCompat) darkThemeSwitch.getActionView();
+        switchCompat.setChecked(Settings.isSatelliteMapStyle(this));
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Settings.setSatelliteMapStyle(MainActivity.this, isChecked);
+                mapTools.updateMapStyle();
+            }
+        });
     }
 
     @Override
@@ -135,7 +157,8 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
 
     @Override
     public void onMapReady(MapboxMap mapboxMap) {
-
+        mapTools = new MapTools(mapboxMap, this);
+        mapTools.initialize();
     }
 
     @Override
