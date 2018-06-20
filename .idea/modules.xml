@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file:///media/moses/Surblime/Android/Zunguka/Zunguka.iml" filepath="/media/moses/Surblime/Android/Zunguka/Zunguka.iml" />
+      <module fileurl="file:///media/moses/Surblime/Android/Zunguka/app/app.iml" filepath="/media/moses/Surblime/Android/Zunguka/app/app.iml" />
+      <module fileurl="file:///media/moses/Surblime/Android/Zunguka/surblime/surblime.iml" filepath="/media/moses/Surblime/Android/Zunguka/surblime/surblime.iml" />
+    </modules>
+  </component>
+</project>
