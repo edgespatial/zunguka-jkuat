@@ -1,43 +1,61 @@
 package com.edgespatial.zunguka.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.transition.Fade;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.edgespatial.zunguka.R;
+import com.edgespatial.zunguka.fragments.BuildingsFragment;
 import com.edgespatial.zunguka.util.MapTools;
 import com.edgespatial.zunguka.util.Settings;
-import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.SupportMapFragment;
 import com.mg.surblime.activities.DrawerActivity;
-import com.mg.surblime.util.Tools;
 
 public class MainActivity extends DrawerActivity implements OnMapReadyCallback, DrawerLayout.DrawerListener {
 
 
+    private static final int REQUEST_CODE_DIRECTIONS = 1001;
+    private static final int REQUEST_CODE_PLACE = 1002;
+    private static final String EXTRA_CURRENT_FRAGMENT = "current_fragment";
     private MapView mapView;
     private FloatingSearchView floatingSearchView;
     private MapTools mapTools;
 
 
+    public static final String MAP_FRAGMENT = "map_fragment";
+    public static final String BUILDINGS_FRAGMENT = "buildings_fragment";
+    public static final String BUILDING_PREVIEW_FRAGMENT = "building_preview_fragment";
+
+
+    private static final String[] FRAGMENTS = new String[]{MAP_FRAGMENT, BUILDINGS_FRAGMENT, BUILDING_PREVIEW_FRAGMENT};
+    private String currentFragment;
+    private int currentFragmentIndex = 0;
+    private boolean reloadMap = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mapView = findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-
-        mapView.getMapAsync(this);
+        if (savedInstanceState != null) {
+            this.reloadMap = true;
+        }
+        switchFragments(savedInstanceState == null ? 0 : savedInstanceState.getInt(EXTRA_CURRENT_FRAGMENT, 0));
 
         floatingSearchView = findViewById(R.id.floating_search_view);
         floatingSearchView.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
@@ -56,6 +74,19 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
         initializeSatelliteSwitch();
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(EXTRA_CURRENT_FRAGMENT, currentFragmentIndex);
+        super.onSaveInstanceState(outState);
+    }
+
+    public SupportMapFragment getSupportMapFragment() {
+        SupportMapFragment supportMapFragment = (SupportMapFragment)
+                getSupportFragmentManager().findFragmentByTag(MAP_FRAGMENT);
+        return supportMapFragment;
+    }
+
     private void initializeSatelliteSwitch() {
         MenuItem darkThemeSwitch = ((NavigationView) findViewById(navigationViewId())).getMenu().findItem(R.id.nav_satellite);
         SwitchCompat switchCompat = (SwitchCompat) darkThemeSwitch.getActionView();
@@ -65,8 +96,68 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Settings.setSatelliteMapStyle(MainActivity.this, isChecked);
                 mapTools.updateMapStyle();
+                closeDrawer();
             }
         });
+    }
+
+    public Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentByTag(currentFragment);
+    }
+
+    public void switchFragments(Fragment fragment, FragmentTransaction fragmentTransaction, String tag) {
+        Fragment previousFragment = getSupportFragmentManager().findFragmentByTag(this.currentFragment);
+        Fragment newFragment = getSupportFragmentManager().findFragmentByTag(tag);
+
+        if (tag.equals(MAP_FRAGMENT) && reloadMap) {
+            fragmentTransaction.remove(newFragment);
+            newFragment = null;
+            reloadMap = false;
+        }
+
+        if (newFragment == null) {
+            newFragment = fragment;
+            fragmentTransaction.add(R.id.mainContent, newFragment, tag);
+            newFragment.setEnterTransition(new Fade());
+            fragmentTransaction.commit();
+        } else {
+            newFragment.setEnterTransition(new Fade());
+            fragmentTransaction.show(getSupportFragmentManager().findFragmentByTag(tag));
+            fragmentTransaction.commit();
+        }
+
+        if (previousFragment != null) {
+            previousFragment.setExitTransition(new Fade());
+            getSupportFragmentManager().beginTransaction().hide(previousFragment).commit();
+        }
+    }
+
+    public int getMainContentView() {
+        return R.id.mainContent;
+    }
+
+    public void switchFragments(Fragment fragment, String tag) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        switchFragments(fragment, fragmentTransaction, tag);
+    }
+
+    public void switchFragments(int index) {
+        Fragment newFragment = null;
+        switch (index) {
+            case 0:
+                newFragment = new SupportMapFragment();
+                ((SupportMapFragment) newFragment).getMapAsync(this);
+                break;
+            case 1:
+                newFragment = new BuildingsFragment();
+                break;
+        }
+        if (newFragment != null) {
+            newFragment.setRetainInstance(true);
+        }
+        switchFragments(newFragment, FRAGMENTS[index]);
+        currentFragment = FRAGMENTS[index];
+        currentFragmentIndex = index;
     }
 
     @Override
@@ -74,50 +165,24 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        switch (id) {
+            case R.id.nav_directions:
+                showDirections();
+                break;
+            case R.id.nav_buildings:
+                switchFragments(1);
+                break;
+            case R.id.nav_home:
+                switchFragments(0);
+                break;
+        }
+        closeDrawer();
         return true;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
+    private void showDirections() {
+        Intent intent = new Intent(this, DirectionsActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_DIRECTIONS);
     }
 
     @Override

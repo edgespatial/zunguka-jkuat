@@ -14,7 +14,6 @@
 
         <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:mapbox="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -34,14 +33,11 @@
 
             </android.support.design.widget.AppBarLayout>
 
-            <com.mapbox.mapboxsdk.maps.MapView
-                android:id="@+id/mapView"
+            <FrameLayout
+                android:id="@+id/mainContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                mapbox:mapbox_cameraTargetLat="@string/location_latitude"
-                mapbox:mapbox_cameraTargetLng="@string/location_longitude"
-                mapbox:mapbox_cameraZoom="14"
-                mapbox:mapbox_uiRotateGestures="true" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </android.support.design.widget.CoordinatorLayout>
 
         <com.arlib.floatingsearchview.FloatingSearchView

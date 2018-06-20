@@ -4,30 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/home"
-        android:title="@string/home" />
-    <item
-        android:id="@+id/nav_buildings"
-        android:icon="@drawable/buildings"
-        android:title="@string/buildings" />
-    <item
-        android:id="@+id/nav_schools"
-        android:icon="@drawable/schools"
-        android:title="@string/schools" />
-    <item
-        android:id="@+id/nav_wifi_zones"
-        android:icon="@drawable/wifi_zones"
-        android:title="@string/wifi_zones" />
-    <item
-        android:id="@+id/nav_gates"
-        android:icon="@drawable/gates"
-        android:title="@string/gates" />
-    <item
-        android:id="@+id/nav_directions"
-        android:icon="@drawable/directions"
-        android:title="@string/directions" />
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:checked="true"
+            android:icon="@drawable/home"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_buildings"
+            android:icon="@drawable/buildings"
+            android:title="@string/buildings" />
+        <item
+            android:id="@+id/nav_schools"
+            android:icon="@drawable/schools"
+            android:title="@string/schools" />
+        <item
+            android:id="@+id/nav_wifi_zones"
+            android:icon="@drawable/wifi_zones"
+            android:title="@string/wifi_zones" />
+        <item
+            android:id="@+id/nav_gates"
+            android:icon="@drawable/gates"
+            android:title="@string/gates" />
+        <item
+            android:id="@+id/nav_directions"
+            android:icon="@drawable/directions"
+            android:title="@string/directions" />
+    </group>
 
     <item android:title="@string/more">
         <menu>

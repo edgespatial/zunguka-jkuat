@@ -19,4 +19,6 @@
     <string name="map_box_access_token">pk.eyJ1IjoiZ2l0YXVtb3NlczQiLCJhIjoiY2pjOWdhODg4MG9kYzJ3bzR0eHE0ZXVodyJ9.zU1cfiq9SWoVsTaPdoFnBQ</string>
     <string name="more">More</string>
     <string name="satellite">Satellite Map</string>
+    <string name="starting_point">Choose starting point</string>
+    <string name="destination_point">Choose destination point</string>
 </resources>

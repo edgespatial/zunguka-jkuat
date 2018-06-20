@@ -4,7 +4,10 @@ import android.content.Context;
 
 import com.edgespatial.zunguka.api.ZungukaAPI;
 import com.edgespatial.zunguka.api.models.Boundary;
+import com.mapbox.mapboxsdk.camera.CameraUpdate;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.constants.Style;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mg.surblime.api.ModelDataListener;
 
@@ -15,6 +18,7 @@ import com.mg.surblime.api.ModelDataListener;
 public class MapTools {
 
     private static final float MIN_ZOOM = 12f;
+    private static final float DEFAULT_ZOOM = 14f;
 
     private final MapboxMap mapboxMap;
     private final Context context;
@@ -23,6 +27,7 @@ public class MapTools {
         this.mapboxMap = mapboxMap;
         this.context = context;
         mapboxMap.setMinZoomPreference(MIN_ZOOM);
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Settings.getInitialPosition(context)), DEFAULT_ZOOM));
     }
 
     public MapboxMap getMapboxMap() {
