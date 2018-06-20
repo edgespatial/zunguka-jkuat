@@ -7,16 +7,8 @@ import com.mg.surblime.BaseModel;
  * Created by moses on 6/20/18.
  */
 
-public class Place extends BaseModel {
+public class Place extends PhysicalLocation {
 
-    @SerializedName("id")
-    public int id;
-    @SerializedName("name")
-    public String name;
     @SerializedName("common_name")
     public String commonName;
-    @SerializedName("image")
-    public String image;
-    @SerializedName("geom")
-    public Point point;
 }

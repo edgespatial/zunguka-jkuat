@@ -2,23 +2,25 @@ package com.edgespatial.zunguka.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.transition.Fade;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.edgespatial.zunguka.R;
+import com.edgespatial.zunguka.api.models.PhysicalLocation;
 import com.edgespatial.zunguka.fragments.BuildingsFragment;
+import com.edgespatial.zunguka.fragments.SchoolsFragment;
 import com.edgespatial.zunguka.util.MapTools;
 import com.edgespatial.zunguka.util.Settings;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -40,13 +42,14 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
 
     public static final String MAP_FRAGMENT = "map_fragment";
     public static final String BUILDINGS_FRAGMENT = "buildings_fragment";
-    public static final String BUILDING_PREVIEW_FRAGMENT = "building_preview_fragment";
+    public static final String SCHOOLS_FRAGMENT = "schools_fragment";
 
 
-    private static final String[] FRAGMENTS = new String[]{MAP_FRAGMENT, BUILDINGS_FRAGMENT, BUILDING_PREVIEW_FRAGMENT};
+    private static final String[] FRAGMENTS = new String[]{MAP_FRAGMENT, BUILDINGS_FRAGMENT, SCHOOLS_FRAGMENT};
     private String currentFragment;
     private int currentFragmentIndex = 0;
     private boolean reloadMap = false;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +77,33 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
         initializeSatelliteSwitch();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (currentFragment.equals(MAP_FRAGMENT)) {
+            super.onBackPressed();
+        } else {
+            if (getDrawer().isDrawerOpen(GravityCompat.START)) {
+                closeDrawer();
+            } else {
+                switchFragments(0);
+            }
+        }
+    }
+
+    public void showPositionMarker(final PhysicalLocation physicalLocation) {
+        switchFragments(0);
+        new Handler()
+                .postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mapTools.displaySingleLocation(physicalLocation);
+                    }
+                }, 1000);
+    }
+
+    public MapTools getMapTools() {
+        return mapTools;
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -126,7 +156,7 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
             fragmentTransaction.commit();
         }
 
-        if (previousFragment != null) {
+        if (previousFragment != null && !currentFragment.equals(tag)) {
             previousFragment.setExitTransition(new Fade());
             getSupportFragmentManager().beginTransaction().hide(previousFragment).commit();
         }
@@ -142,18 +172,27 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
     }
 
     public void switchFragments(int index) {
+        NavigationView navigationView = findViewById(navigationViewId());
+        int currentSelectedItem = 0;
         Fragment newFragment = null;
         switch (index) {
             case 0:
                 newFragment = new SupportMapFragment();
                 ((SupportMapFragment) newFragment).getMapAsync(this);
+                currentSelectedItem = R.id.nav_home;
                 break;
             case 1:
                 newFragment = new BuildingsFragment();
+                currentSelectedItem = R.id.nav_buildings;
+                break;
+            case 2:
+                newFragment = new SchoolsFragment();
+                currentSelectedItem = R.id.nav_schools;
                 break;
         }
         if (newFragment != null) {
             newFragment.setRetainInstance(true);
+            navigationView.setCheckedItem(currentSelectedItem);
         }
         switchFragments(newFragment, FRAGMENTS[index]);
         currentFragment = FRAGMENTS[index];
@@ -169,12 +208,14 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
             case R.id.nav_directions:
                 showDirections();
                 break;
-            case R.id.nav_buildings:
-                switchFragments(1);
-                break;
             case R.id.nav_home:
                 switchFragments(0);
                 break;
+            case R.id.nav_buildings:
+                switchFragments(1);
+                break;
+            case R.id.nav_schools:
+                switchFragments(2);
         }
         closeDrawer();
         return true;

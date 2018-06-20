@@ -15,6 +15,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 /**
  * Created by moses on 6/20/18.
@@ -26,6 +27,9 @@ public interface Api {
 
     @GET("schools/")
     Call<List<School>> getSchools();
+
+    @GET("school_buildings/{school_id}")
+    Call<Building> getSchoolBuilding(@Path("school_id") int schoolId);
 
     @GET("departments/")
     Call<List<Department>> getDepartments();

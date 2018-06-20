@@ -1,9 +1,17 @@
 package com.edgespatial.zunguka.util;
 
+import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 
+import com.edgespatial.zunguka.R;
 import com.edgespatial.zunguka.api.ZungukaAPI;
 import com.edgespatial.zunguka.api.models.Boundary;
+import com.edgespatial.zunguka.api.models.PhysicalLocation;
+import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.Marker;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.constants.Style;
@@ -22,6 +30,8 @@ public class MapTools {
 
     private final MapboxMap mapboxMap;
     private final Context context;
+
+    private Marker positionMarker;
 
     public MapTools(MapboxMap mapboxMap, Context context) {
         this.mapboxMap = mapboxMap;
@@ -56,5 +66,33 @@ public class MapTools {
 
                     }
                 });
+    }
+
+    public void displaySingleLocation(PhysicalLocation physicalLocation) {
+        if (positionMarker != null) {
+            mapboxMap.removeMarker(positionMarker);
+        }
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(physicalLocation.getLatlng())
+                .title(physicalLocation.name)
+                .icon(IconFactory.getInstance(context).fromResource(R.drawable.location_map_pin));
+        mapboxMap.addMarker(markerOptions);
+        positionMarker = markerOptions.getMarker();
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(physicalLocation.getLatlng(), 16f));
+    }
+
+    private static class LatLngEvaluator implements TypeEvaluator<LatLng> {
+        // Method is used to interpolate the marker animation.
+
+        private LatLng latLng = new LatLng();
+
+        @Override
+        public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
+            latLng.setLatitude(startValue.getLatitude()
+                    + ((endValue.getLatitude() - startValue.getLatitude()) * fraction));
+            latLng.setLongitude(startValue.getLongitude()
+                    + ((endValue.getLongitude() - startValue.getLongitude()) * fraction));
+            return latLng;
+        }
     }
 }

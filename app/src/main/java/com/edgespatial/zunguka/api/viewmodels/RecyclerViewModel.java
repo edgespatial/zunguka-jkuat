@@ -1,5 +1,9 @@
 package com.edgespatial.zunguka.api.viewmodels;
 
+import android.databinding.Bindable;
+import android.widget.EditText;
+
+import com.edgespatial.zunguka.BR;
 import com.edgespatial.zunguka.R;
 import com.mg.surblime.BaseModel;
 import com.mg.surblime.ObservableRecyclerViewModel;
@@ -16,8 +20,10 @@ import me.tatarka.bindingcollectionadapter2.LayoutManagers;
 public abstract class RecyclerViewModel<T extends BaseModel> extends ObservableRecyclerViewModel<T> {
 
     public List<T> list = new ArrayList<>();
+    private List<T> temp = new ArrayList<>();
 
     @Override
+    @Bindable
     public List<T> getItems() {
         return list;
     }
@@ -35,6 +41,7 @@ public abstract class RecyclerViewModel<T extends BaseModel> extends ObservableR
     @Override
     public void addItem(T t) {
         list.add(t);
+        notifyPropertyChanged(BR.items);
     }
 
     @Override
@@ -48,4 +55,23 @@ public abstract class RecyclerViewModel<T extends BaseModel> extends ObservableR
     }
 
     public abstract String getTitle();
+
+    public void filterFrom(String search) {
+        temp = new ArrayList<>(list);
+        list.clear();
+        for (T t : temp) {
+            boolean found = false;
+            for (String s : filterKeys(t)) {
+                if (s != null && s.toLowerCase().contains(search.toLowerCase())) {
+                    found = true;
+                }
+            }
+            if (found) {
+                list.add(t);
+            }
+        }
+        notifyPropertyChanged(BR.items);
+    }
+
+    public abstract String[] filterKeys(T t);
 }

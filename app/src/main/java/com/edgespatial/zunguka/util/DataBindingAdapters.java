@@ -5,12 +5,16 @@ import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.edgespatial.zunguka.R;
+import com.edgespatial.zunguka.api.viewmodels.RecyclerViewModel;
 import com.mg.surblime.util.Tools;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -56,11 +60,31 @@ public class DataBindingAdapters {
         view.setBackgroundColor(color);
     }
 
+    @BindingAdapter("filter")
+    public static void setFilter(EditText editText, final RecyclerViewModel recyclerViewModel) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                recyclerViewModel.filterFrom(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
     @BindingAdapter("circularTile")
     public static void setCircularTile(ImageView imageView, String text) {
         TextDrawable textDrawable = TextDrawable.builder().beginConfig()
                 .toUpperCase().endConfig()
-                .buildRect(String.valueOf(text.charAt(0)), ColorGenerator.MATERIAL.getRandomColor());
+                .buildRect(Tools.getFirstChar(text).toUpperCase(), ColorGenerator.MATERIAL.getRandomColor());
 
         imageView.setImageDrawable(textDrawable);
     }

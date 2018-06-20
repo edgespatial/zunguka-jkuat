@@ -19,4 +19,21 @@ public class School extends BaseModel {
     public String dean;
     @SerializedName("college")
     public int college;
+
+    public String getCollege() {
+        switch (college) {
+            case 1:
+                return "College of Health Sciences";
+            case 2:
+                return "College of Engineering and Technology";
+            case 3:
+                return "College of Pure and Applied Sciences";
+            case 4:
+                return "College of Human Resources and Development";
+            case 5:
+                return "Faculty of Agriculture";
+            default:
+                return "";
+        }
+    }
 }

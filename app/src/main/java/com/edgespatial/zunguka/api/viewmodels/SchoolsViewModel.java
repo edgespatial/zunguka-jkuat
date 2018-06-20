@@ -1,10 +1,8 @@
 package com.edgespatial.zunguka.api.viewmodels;
 
-import com.edgespatial.zunguka.BR;
 import com.edgespatial.zunguka.R;
-import com.edgespatial.zunguka.api.models.Building;
-
-import java.util.List;
+import com.edgespatial.zunguka.BR;
+import com.edgespatial.zunguka.api.models.SchoolBuilding;
 
 import me.tatarka.bindingcollectionadapter2.LayoutManagers;
 
@@ -12,16 +10,15 @@ import me.tatarka.bindingcollectionadapter2.LayoutManagers;
  * Created by moses on 6/20/18.
  */
 
-public class BuildingsViewModel extends RecyclerViewModel<Building> {
-
+public class SchoolsViewModel extends RecyclerViewModel<SchoolBuilding> {
     @Override
     public int getVariableId() {
-        return BR.building;
+        return BR.school_building;
     }
 
     @Override
     public int getItemLayoutResource() {
-        return R.layout.item_building;
+        return R.layout.item_school_building;
     }
 
     @Override
@@ -36,15 +33,19 @@ public class BuildingsViewModel extends RecyclerViewModel<Building> {
 
     @Override
     public String getTitle() {
-        return "Buildings";
+        return "Schools";
     }
 
     @Override
-    public String[] filterKeys(Building building) {
+    public String[] filterKeys(SchoolBuilding schoolBuilding) {
         return new String[]{
-                building.name,
-                building.abbreviation,
-                building.detail,
+                schoolBuilding.detail,
+                schoolBuilding.school.name,
+                schoolBuilding.school.abbreviation,
+                schoolBuilding.school.dean,
+                schoolBuilding.school.getCollege(),
+                schoolBuilding.name,
+                schoolBuilding.abbreviation
         };
     }
 
