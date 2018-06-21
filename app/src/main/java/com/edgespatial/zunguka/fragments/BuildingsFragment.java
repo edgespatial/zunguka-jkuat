@@ -18,7 +18,8 @@ public class BuildingsFragment extends PhysicalLocationFragment<BuildingsViewMod
 
     @Override
     public void loadResource(boolean loadFromCache) {
-        new ZungukaAPI(getContext())
-                .getBuildings(this);
+        ZungukaAPI zungukaAPI = new ZungukaAPI(getContext());
+        zungukaAPI.setUseCache(loadFromCache);
+        zungukaAPI.getBuildings(this);
     }
 }

@@ -5,8 +5,10 @@ import android.databinding.BindingAdapter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.edgespatial.zunguka.R;
 import com.edgespatial.zunguka.api.viewmodels.RecyclerViewModel;
+import com.mg.surblime.ObservableRecyclerViewModel;
 import com.mg.surblime.util.Tools;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -48,9 +51,11 @@ public class DataBindingAdapters {
         view.setImageDrawable(drawable);
     }
 
+
     @BindingAdapter("android:src")
     public static void setImageResource(ImageView imageView, int resource) {
-        imageView.setImageDrawable(imageView.getContext().getResources().getDrawable(resource));
+        imageView.setImageDrawable(ResourcesCompat.getDrawable(
+                imageView.getContext().getResources(), resource, imageView.getContext().getTheme()));
     }
 
     @BindingAdapter("backgroundFromAttribute")
@@ -58,26 +63,6 @@ public class DataBindingAdapters {
         final Context context = view.getContext();
         final int color = Tools.resolveColor(context, backgroundColorAttr, Color.BLACK);
         view.setBackgroundColor(color);
-    }
-
-    @BindingAdapter("filter")
-    public static void setFilter(EditText editText, final RecyclerViewModel recyclerViewModel) {
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                recyclerViewModel.filterFrom(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     @BindingAdapter("circularTile")

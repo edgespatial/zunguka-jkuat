@@ -5,11 +5,22 @@ import android.content.Context;
 import com.edgespatial.zunguka.Zunguka;
 import com.edgespatial.zunguka.api.models.Boundary;
 import com.edgespatial.zunguka.api.models.Building;
+import com.edgespatial.zunguka.api.models.Gate;
+import com.edgespatial.zunguka.api.models.PhysicalLocation;
 import com.edgespatial.zunguka.api.models.Point;
 import com.edgespatial.zunguka.api.models.School;
 import com.edgespatial.zunguka.api.models.SchoolBuilding;
+import com.edgespatial.zunguka.api.models.SearchHistory;
+import com.edgespatial.zunguka.api.models.SearchResults;
+import com.edgespatial.zunguka.api.models.WaterBody;
+import com.edgespatial.zunguka.api.models.WifiZone;
 import com.edgespatial.zunguka.api.viewmodels.BuildingsViewModel;
+import com.edgespatial.zunguka.api.viewmodels.GatesViewModel;
+import com.edgespatial.zunguka.api.viewmodels.PlaceSuggestionViewModel;
 import com.edgespatial.zunguka.api.viewmodels.SchoolsViewModel;
+import com.edgespatial.zunguka.api.viewmodels.SearchResultsViewModel;
+import com.edgespatial.zunguka.api.viewmodels.WifiZoneViewModel;
+import com.edgespatial.zunguka.util.ZungukaCache;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -30,6 +41,7 @@ import com.mg.surblime.api.ViewModelDataListener;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Interceptor;
@@ -54,6 +66,7 @@ public class ZungukaAPI extends SurblimeAPI {
     @Override
     public GsonBuilder createGsonBuilder(GsonBuilder gsonBuilder) {
         gsonBuilder.registerTypeAdapter(Building.class, new BuildingDeserializer());
+        gsonBuilder.registerTypeAdapter(WaterBody.class, new WaterBodyDeserializer());
         return gsonBuilder;
     }
 
@@ -76,6 +89,45 @@ public class ZungukaAPI extends SurblimeAPI {
                         dataListener.onFailure();
                     }
                 }).invoke("getBoundary")
+                .execute();
+    }
+
+    public void getWifiZones(final ViewModelDataListener<WifiZoneViewModel, WifiZone> viewModelWifiZoneViewModelDataListener) {
+        new SimpleQuery<List<WifiZone>>()
+                .with(this)
+                .callback(new ModelDataListener<List<WifiZone>>() {
+                    @Override
+                    public void onSuccess(List<WifiZone> wifiZones) {
+                        WifiZoneViewModel wifiZoneViewModel = new WifiZoneViewModel();
+                        wifiZoneViewModel.setItems(wifiZones);
+                        viewModelWifiZoneViewModelDataListener.onSuccess(wifiZoneViewModel);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        viewModelWifiZoneViewModelDataListener.onFailure();
+                    }
+                })
+                .invoke("getWifiZones")
+                .execute();
+    }
+
+    public void getGates(final ViewModelDataListener<GatesViewModel, Gate> viewModelGateViewModelDataListener) {
+        new SimpleQuery<List<Gate>>()
+                .with(this)
+                .callback(new ModelDataListener<List<Gate>>() {
+                    @Override
+                    public void onSuccess(List<Gate> gates) {
+                        GatesViewModel gatesViewModel = new GatesViewModel();
+                        gatesViewModel.setItems(gates);
+                        viewModelGateViewModelDataListener.onSuccess(gatesViewModel);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                        viewModelGateViewModelDataListener.onFailure();
+                    }
+                }).invoke("getGates")
                 .execute();
     }
 
@@ -137,6 +189,82 @@ public class ZungukaAPI extends SurblimeAPI {
                 }).execute();
     }
 
+    public void search(final String text, final ViewModelDataListener<SearchResultsViewModel, PlaceSuggestionViewModel> viewModelPlaceSuggestionViewModelViewModelDataListener) {
+        if (text == null || text.isEmpty()) {
+            SearchResultsViewModel searchResultsViewModel = new SearchResultsViewModel();
+            SearchHistory searchHistory = new ZungukaCache().with(getContext())
+                    .get(SearchHistory.class);
+            if (searchHistory == null) {
+                searchHistory = new SearchHistory();
+            }
+            searchResultsViewModel.addItem(new PlaceSuggestionViewModel(searchHistory.items, "History"));
+            viewModelPlaceSuggestionViewModelViewModelDataListener.onSuccess(searchResultsViewModel);
+        } else {
+            new SimpleQuery<SearchResults>()
+                    .with(this)
+                    .subscribe("searchBuildings", null)
+                    .subscribe("searchPlaces", null)
+                    .subscribe("searchWifiZones", null)
+                    .subscribe("searchParks", null)
+                    .subscribe("searchGates", null)
+                    .subscribe("searchFields", null)
+                    .subscribe("searchWaterBodies", null)
+                    .callback(new ModelDataListener<SearchResults>() {
+                        @Override
+                        public void onSuccess(SearchResults searchResults) {
+                            SearchResultsViewModel searchResultsViewModel = new SearchResultsViewModel();
+                            SearchHistory searchHistory = new ZungukaCache().with(getContext())
+                                    .get(SearchHistory.class);
+                            if (searchHistory == null) {
+                                searchHistory = new SearchHistory();
+                            }
+                            searchResultsViewModel.addItems(Arrays.asList(
+                                    new PlaceSuggestionViewModel(searchHistory.filter(text), "History"),
+                                    new PlaceSuggestionViewModel(searchResults.getBuildings(), "Buildings"),
+                                    new PlaceSuggestionViewModel(searchResults.getFields(), "Fields"),
+                                    new PlaceSuggestionViewModel(searchResults.getGates(), "Gates"),
+                                    new PlaceSuggestionViewModel(searchResults.getParks(), "Parks"),
+                                    new PlaceSuggestionViewModel(searchResults.getPlaces(), "Places"),
+                                    new PlaceSuggestionViewModel(searchResults.getWaterBodies(), "Water Bodies"),
+                                    new PlaceSuggestionViewModel(searchResults.getWifiZones(), "Wifi Zones")
+                            ));
+
+                            viewModelPlaceSuggestionViewModelViewModelDataListener.onSuccess(searchResultsViewModel);
+                        }
+
+                        @Override
+                        public void onFailure() {
+                            viewModelPlaceSuggestionViewModelViewModelDataListener.onFailure();
+                        }
+                    })
+                    .zip(new SurblimeAPIQuery.Zipper<SearchResults>() {
+                        @Override
+                        public SearchResults combine(Object[] objects) {
+                            return new SearchResults(objects, text);
+                        }
+                    });
+        }
+    }
+
+    public void search(final String text, ModelDataListener<SearchResults> modelDataListener) {
+        new SimpleQuery<SearchResults>()
+                .with(this)
+                .subscribe("searchBuildings", null)
+                .subscribe("searchPlaces", null)
+                .subscribe("searchWifiZones", null)
+                .subscribe("searchParks", null)
+                .subscribe("searchGates", null)
+                .subscribe("searchFields", null)
+                .subscribe("searchWaterBodies", null)
+                .callback(modelDataListener)
+                .zip(new SurblimeAPIQuery.Zipper<SearchResults>() {
+                    @Override
+                    public SearchResults combine(Object[] objects) {
+                        return new SearchResults(objects, text);
+                    }
+                });
+    }
+
     @Override
     public Class<?> getRetrofitInterface() {
         return Api.class;
@@ -178,6 +306,24 @@ public class ZungukaAPI extends SurblimeAPI {
             }
 
             return building;
+        }
+
+    }
+
+    static class WaterBodyDeserializer implements JsonDeserializer<WaterBody> {
+
+        @Override
+        public WaterBody deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            WaterBody waterbody = new WaterBody();
+            com.google.gson.JsonObject jsonObject = json.getAsJsonObject();
+
+
+            waterbody.id = jsonObject.get("id").getAsInt();
+            waterbody.name = jsonObject.get("name") instanceof JsonNull ? "" : jsonObject.get("name").getAsString();
+            waterbody.image = jsonObject.get("image") instanceof JsonNull ? "" : jsonObject.get("image").getAsString();
+            waterbody.point = new Gson().fromJson(jsonObject.get("point"), Point.class);
+
+            return waterbody;
         }
     }
 }

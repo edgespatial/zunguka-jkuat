@@ -1,32 +1,28 @@
 package com.edgespatial.zunguka.api.viewmodels;
 
-import com.edgespatial.zunguka.BR;
 import com.edgespatial.zunguka.R;
-import com.edgespatial.zunguka.api.models.Building;
-
-import java.util.List;
+import com.mg.surblime.BR;
 
 import me.tatarka.bindingcollectionadapter2.LayoutManagers;
 
 /**
- * Created by moses on 6/20/18.
+ * Created by moses on 6/21/18.
  */
 
-public class BuildingsViewModel extends RecyclerViewModel<Building> {
-
+public class SearchResultsViewModel extends RecyclerViewModel<PlaceSuggestionViewModel> {
     @Override
     public int getVariableId() {
-        return BR.building;
+        return BR.viewModel;
     }
 
     @Override
     public int getItemLayoutResource() {
-        return R.layout.item_building;
+        return R.layout.item_place_suggestion;
     }
 
     @Override
     public int getItemListenerId() {
-        return BR.listener;
+        return 0;
     }
 
     @Override
@@ -36,16 +32,11 @@ public class BuildingsViewModel extends RecyclerViewModel<Building> {
 
     @Override
     public String getTitle() {
-        return "Buildings";
+        return null;
     }
 
     @Override
-    public String[] filterKeys(Building building) {
-        return new String[]{
-                building.name,
-                building.abbreviation,
-                building.detail
-        };
+    public int getLayoutResource() {
+        return com.mg.surblime.R.layout.fragment_resource_collection;
     }
-
 }

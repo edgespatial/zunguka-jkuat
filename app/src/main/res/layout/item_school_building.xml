@@ -17,11 +17,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:background="?selectableItemBackground"
+        android:clickable="true"
         android:focusable="true"
         android:onClick="@{ (view) -> listener.onItemClick(view, school_building) }"
         android:orientation="vertical">
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/md_grey_400" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,13 +61,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ school_building.school.getCollege() }"/>
+                    android:text="@{ school_building.school.getCollege() }" />
             </LinearLayout>
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/md_grey_400" />
     </LinearLayout>
 </layout>

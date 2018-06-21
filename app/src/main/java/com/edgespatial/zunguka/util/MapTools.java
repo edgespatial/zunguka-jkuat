@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.os.Handler;
 
 import com.edgespatial.zunguka.R;
 import com.edgespatial.zunguka.api.ZungukaAPI;
@@ -16,8 +17,10 @@ import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.constants.Style;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mg.surblime.api.ModelDataListener;
+
 
 /**
  * Created by moses on 6/20/18.
@@ -30,12 +33,14 @@ public class MapTools {
 
     private final MapboxMap mapboxMap;
     private final Context context;
+    private final MapView mapView;
 
     private Marker positionMarker;
 
-    public MapTools(MapboxMap mapboxMap, Context context) {
+    public MapTools(MapboxMap mapboxMap, Context context, MapView mapView) {
         this.mapboxMap = mapboxMap;
         this.context = context;
+        this.mapView = mapView;
         mapboxMap.setMinZoomPreference(MIN_ZOOM);
         mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Settings.getInitialPosition(context)), DEFAULT_ZOOM));
     }

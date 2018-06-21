@@ -13,6 +13,7 @@ import com.edgespatial.zunguka.api.models.WifiZone;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -54,4 +55,25 @@ public interface Api {
 
     @GET("gates/")
     Call<List<Gate>> getGates();
+
+    @GET("buildings/")
+    Observable<List<Building>> searchBuildings();
+
+    @GET("places/")
+    Observable<List<Place>> searchPlaces();
+
+    @GET("wifizones/")
+    Observable<List<WifiZone>> searchWifiZones();
+
+    @GET("parks/")
+    Observable<List<Park>> searchParks();
+
+    @GET("fields/")
+    Observable<List<Field>> searchFields();
+
+    @GET("waterbodies/")
+    Observable<List<WaterBody>> searchWaterBodies();
+
+    @GET("gates/")
+    Observable<List<Gate>> searchGates();
 }

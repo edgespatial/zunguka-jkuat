@@ -6,8 +6,8 @@
         <import type="com.mg.surblime.util.Tools" />
 
         <variable
-            name="building"
-            type="com.edgespatial.zunguka.api.models.Building" />
+            name="gate"
+            type="com.edgespatial.zunguka.api.models.Gate" />
 
         <variable
             name="listener"
@@ -20,7 +20,7 @@
         android:background="?selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="@{ (view) -> listener.onItemClick(view, building) }"
+        android:onClick="@{ (view) -> listener.onItemClick(view, gate) }"
         android:orientation="vertical">
 
         <View
@@ -38,7 +38,7 @@
                 android:layout_width="@dimen/place_image_size"
                 android:layout_height="@dimen/place_image_size"
                 android:scaleType="centerCrop"
-                android:src="@{ building.image == null || building.image.isEmpty() ?  building.name : building.image}" />
+                android:src="@{ gate.image == null || gate.image.isEmpty() ?  gate.getChar() : gate.image}" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ building.name }"
+                    android:text="@{ gate.name }"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>

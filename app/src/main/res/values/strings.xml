@@ -22,4 +22,10 @@
     <string name="starting_point">Choose starting point</string>
     <string name="destination_point">Choose destination point</string>
     <string name="hint_filter">Type to filter...</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="history">History</string>
+    <string name="places">Places</string>
+    <string name="parks">Parks</string>
+    <string name="search_location">Search...</string>
 </resources>

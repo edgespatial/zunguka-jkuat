@@ -1,5 +1,7 @@
 package com.edgespatial.zunguka.api.models;
 
+import android.os.Parcel;
+
 import com.mg.surblime.BaseModel;
 
 /**
@@ -9,6 +11,13 @@ import com.mg.surblime.BaseModel;
 public class SchoolBuilding extends Building {
 
     public School school;
+
+    public SchoolBuilding(){
+
+    }
+    protected SchoolBuilding(Parcel in) {
+        super(in);
+    }
 
     public void setBuilding(Building building) {
         this.abbreviation = building.abbreviation;

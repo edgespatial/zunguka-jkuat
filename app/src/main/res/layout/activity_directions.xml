@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -14,40 +15,66 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/editTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginBottom="@dimen/margin_large"
                 android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/startingPoint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rectangle_border"
-                    android:inputType="none"
-                    android:padding="@dimen/padding_medium"
-                    android:hint="@string/starting_point"
                     android:layout_marginBottom="@dimen/margin_medium"
+                    android:background="@drawable/rectangle_border"
+                    android:hint="@string/starting_point"
+                    android:editable="false"
+                    android:padding="@dimen/padding_medium"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/dividerColor"
-                    android:textColorHint="@color/textHintColor"/>
+                    android:textColorHint="@color/textHintColor" />
 
                 <EditText
                     android:id="@+id/destinationPoint"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rectangle_border"
-                    android:inputType="none"
-                    android:padding="@dimen/padding_medium"
-                    android:hint="@string/destination_point"
-                    android:textColorHint="@color/textHintColor"
                     android:layout_marginBottom="@dimen/margin_medium"
+                    android:background="@drawable/rectangle_border"
+                    android:hint="@string/destination_point"
+                    android:editable="false"
+                    android:padding="@dimen/padding_medium"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/dividerColor" />
+                    android:textColor="@color/dividerColor"
+                    android:textColorHint="@color/textHintColor" />
+
+                <EditText
+                    android:id="@+id/search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:hint="@string/search_location"
+                    android:padding="@dimen/padding_medium"
+                    android:visibility="gone"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/dividerColor"
+                    android:background="@color/transparent"
+                    android:textColorHint="@color/textHintColor" />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <fragment
+            android:id="@+id/directionsFragment"
+            android:name="com.edgespatial.zunguka.fragments.DirectionSuggestionFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

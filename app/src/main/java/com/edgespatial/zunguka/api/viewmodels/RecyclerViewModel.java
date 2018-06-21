@@ -20,7 +20,6 @@ import me.tatarka.bindingcollectionadapter2.LayoutManagers;
 public abstract class RecyclerViewModel<T extends BaseModel> extends ObservableRecyclerViewModel<T> {
 
     public List<T> list = new ArrayList<>();
-    private List<T> temp = new ArrayList<>();
 
     @Override
     @Bindable
@@ -56,22 +55,9 @@ public abstract class RecyclerViewModel<T extends BaseModel> extends ObservableR
 
     public abstract String getTitle();
 
-    public void filterFrom(String search) {
-        temp = new ArrayList<>(list);
-        list.clear();
-        for (T t : temp) {
-            boolean found = false;
-            for (String s : filterKeys(t)) {
-                if (s != null && s.toLowerCase().contains(search.toLowerCase())) {
-                    found = true;
-                }
-            }
-            if (found) {
-                list.add(t);
-            }
-        }
-        notifyPropertyChanged(BR.items);
+    @Override
+    public int getFilterTextChangedListenerId() {
+        return BR.filterListener;
     }
 
-    public abstract String[] filterKeys(T t);
 }

@@ -2,9 +2,7 @@ package com.edgespatial.zunguka.api.viewmodels;
 
 import com.edgespatial.zunguka.BR;
 import com.edgespatial.zunguka.R;
-import com.edgespatial.zunguka.api.models.Building;
-
-import java.util.List;
+import com.edgespatial.zunguka.api.models.WifiZone;
 
 import me.tatarka.bindingcollectionadapter2.LayoutManagers;
 
@@ -12,16 +10,15 @@ import me.tatarka.bindingcollectionadapter2.LayoutManagers;
  * Created by moses on 6/20/18.
  */
 
-public class BuildingsViewModel extends RecyclerViewModel<Building> {
-
+public class WifiZoneViewModel extends RecyclerViewModel<WifiZone> {
     @Override
     public int getVariableId() {
-        return BR.building;
+        return BR.wifiZone;
     }
 
     @Override
     public int getItemLayoutResource() {
-        return R.layout.item_building;
+        return R.layout.item_wifi_zone;
     }
 
     @Override
@@ -36,16 +33,14 @@ public class BuildingsViewModel extends RecyclerViewModel<Building> {
 
     @Override
     public String getTitle() {
-        return "Buildings";
+        return "Wifi Zones";
     }
 
     @Override
-    public String[] filterKeys(Building building) {
+    public String[] filterKeys(WifiZone wifiZone) {
         return new String[]{
-                building.name,
-                building.abbreviation,
-                building.detail
+                wifiZone.locationName,
+                wifiZone.name
         };
     }
-
 }

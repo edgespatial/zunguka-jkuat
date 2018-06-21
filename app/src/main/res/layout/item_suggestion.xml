@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <import type="com.mg.surblime.util.Tools" />
 
         <variable
-            name="building"
-            type="com.edgespatial.zunguka.api.models.Building" />
+            name="suggestion"
+            type="com.edgespatial.zunguka.api.models.PhysicalLocation" />
 
         <variable
             name="listener"
@@ -20,36 +21,38 @@
         android:background="?selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="@{ (view) -> listener.onItemClick(view, building) }"
+        android:onClick="@{ (view) -> listener.onItemClick(view, suggestion) }"
         android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:background="@color/md_grey_400" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/suggestion_height"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:padding="@dimen/padding_medium">
 
             <android.support.v7.widget.AppCompatImageView
-                android:layout_width="@dimen/place_image_size"
-                android:layout_height="@dimen/place_image_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@{ building.image == null || building.image.isEmpty() ?  building.name : building.image}" />
+                android:src="@{ suggestion.icon }" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:gravity="center_vertical"
                 android:padding="@dimen/padding_medium">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{ building.name }"
+                    android:text="@{ suggestion.name }"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>

@@ -6,4 +6,6 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="place_image_size">100dp</dimen>
+    <dimen name="icon_image_size">24dp</dimen>
+    <dimen name="suggestion_height">48dp</dimen>
 </resources>

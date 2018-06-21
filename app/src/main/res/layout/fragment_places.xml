@@ -8,19 +8,16 @@
         <variable
             name="viewModel"
             type="com.edgespatial.zunguka.api.viewmodels.RecyclerViewModel" />
+
+        <variable
+            name="filterListener"
+            type="com.mg.surblime.ObservableRecyclerViewModel.OnFilterTextChangedListener" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_medium"
-            android:text="@{ viewModel.title }"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -40,7 +37,10 @@
                     android:layout_marginRight="@dimen/margin_small"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:background="@color/transparent"
-                    android:hint="@string/hint_filter" />
+                    android:hint="@string/hint_filter"
+                    android:onTextChanged="@{ (text, start, before, count ) -> filterListener.onTextChanged(text.toString() ) }"
+                    android:padding="@dimen/padding_medium"
+                    android:singleLine="true" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView"
