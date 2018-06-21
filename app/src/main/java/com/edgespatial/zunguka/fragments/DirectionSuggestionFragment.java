@@ -4,9 +4,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
+import com.edgespatial.zunguka.activities.DirectionsActivity;
 import com.edgespatial.zunguka.api.ZungukaAPI;
 import com.edgespatial.zunguka.api.viewmodels.PlaceSuggestionViewModel;
 import com.edgespatial.zunguka.api.viewmodels.SearchResultsViewModel;
+import com.mg.surblime.ObservableRecyclerViewModel;
 import com.mg.surblime.ui.ResourceCollectionFragment;
 
 /**
@@ -37,6 +39,9 @@ public class DirectionSuggestionFragment extends ResourceCollectionFragment<Sear
     @Override
     public void onSuccess(SearchResultsViewModel searchResultsViewModel) {
         super.onSuccess(searchResultsViewModel);
+        for(PlaceSuggestionViewModel placeSuggestionViewModel: searchResultsViewModel.getItems()){
+            placeSuggestionViewModel.setOnItemClickListener((DirectionsActivity)getActivity());
+        }
         notifyDataSetChanged();
     }
 

@@ -72,4 +72,8 @@ public class PhysicalLocation extends BaseModel implements SearchSuggestion, Par
     int getIcon() {
         return R.drawable.history;
     }
+
+    public boolean isEqual(PhysicalLocation other){
+        return other.getLatlng().equals(getLatlng());
+    }
 }

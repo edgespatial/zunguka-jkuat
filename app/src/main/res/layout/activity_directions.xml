@@ -1,68 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            app:titleTextColor="@color/white"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/editTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_large"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/editTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginEnd="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_large"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/startingPoint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginEnd="@dimen/margin_medium"
                     android:layout_marginBottom="@dimen/margin_medium"
-                    android:background="@drawable/rectangle_border"
-                    android:hint="@string/starting_point"
-                    android:editable="false"
-                    android:padding="@dimen/padding_medium"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/dividerColor"
-                    android:textColorHint="@color/textHintColor" />
+                    android:orientation="vertical"
+                    android:weightSum="3">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:tint="@color/dividerColor"
+                        app:srcCompat="@drawable/run"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:tint="@color/dividerColor"
+                        app:srcCompat="@drawable/more"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:tint="@color/dividerColor"
+                        app:srcCompat="@drawable/run"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-                <EditText
-                    android:id="@+id/destinationPoint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:background="@drawable/rectangle_border"
-                    android:hint="@string/destination_point"
-                    android:editable="false"
-                    android:padding="@dimen/padding_medium"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/dividerColor"
-                    android:textColorHint="@color/textHintColor" />
+                    <RadioButton
+                        android:id="@+id/startingPoint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_medium"
+                        android:background="@drawable/search_input_background"
+                        android:button="@color/transparent"
+                        android:editable="false"
+                        android:hint="@string/starting_point"
+                        android:padding="@dimen/padding_medium"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/dividerColor"
+                        android:textColorHint="@color/textHintColor" />
 
-                <EditText
-                    android:id="@+id/search"
-                    android:layout_width="match_parent"
+                    <RadioButton
+                        android:id="@+id/destinationPoint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_medium"
+                        android:background="@drawable/search_input_background"
+                        android:button="@color/transparent"
+                        android:editable="false"
+                        android:hint="@string/destination_point"
+                        android:padding="@dimen/padding_medium"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/dividerColor"
+                        android:textColorHint="@color/textHintColor" />
+                </RadioGroup>
+
+                <ImageView
+                    android:id="@+id/switchLocations"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:hint="@string/search_location"
+                    android:layout_gravity="center"
+                    android:background="?selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:padding="@dimen/padding_medium"
-                    android:visibility="gone"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/dividerColor"
-                    android:background="@color/transparent"
-                    android:textColorHint="@color/textHintColor" />
+                    android:rotation="90"
+                    android:tint="@color/dividerColor"
+                    app:srcCompat="@drawable/to_and_fro" />
             </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:background="@color/transparent"
+                android:hint="@string/search_location"
+                android:padding="@dimen/padding_medium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/dividerColor"
+                android:textColorHint="@color/textHintColor"
+                android:visibility="gone" />
+        </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
@@ -77,4 +136,32 @@
             android:layout_height="wrap_content" />
     </FrameLayout>
 
+    <com.github.jorgecastilloprz.FABProgressCircle
+        android:id="@+id/fabProgressCircle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:visibility="gone"
+        app:arcColor="@color/colorPrimaryDark">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large"
+            android:tint="@color/md_white_1000"
+            app:srcCompat="@drawable/directions" />
+    </com.github.jorgecastilloprz.FABProgressCircle>
+
+    <LinearLayout
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
