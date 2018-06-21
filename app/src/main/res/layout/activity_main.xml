@@ -46,6 +46,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="top"
             android:fitsSystemWindows="false"
+            app:floatingSearch_menu="@menu/main"
             app:floatingSearch_backgroundColor="?android:windowBackground"
             app:floatingSearch_close_search_on_keyboard_dismiss="true"
             app:floatingSearch_leftActionMode="showHamburger"

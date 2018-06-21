@@ -150,43 +150,31 @@ public class ZungukaAPI extends SurblimeAPI {
                 .execute();
     }
 
-    public void getSchools(final ViewModelDataListener<SchoolsViewModel, SchoolBuilding> viewModelSchoolBuildingViewModelDataListener) {
-        new SimpleQuery<List<School>>()
-                .with(this)
-                .invoke("getSchools")
-                .callback(new ModelDataListener<List<School>>() {
+    public void getBuildingFromSchool(final School school, final ModelDataListener<SchoolBuilding> modelDataListener){
+        new SimpleQuery<Building>()
+                .with(ZungukaAPI.this)
+                .invoke("getSchoolBuilding", int.class)
+                .args(school.id)
+                .callback(new ModelDataListener<Building>() {
                     @Override
-                    public void onSuccess(List<School> schools) {
-                        final SchoolsViewModel schoolsViewModel = new SchoolsViewModel();
-                        for (final School school : schools) {
-                            new SimpleQuery<Building>()
-                                    .with(ZungukaAPI.this)
-                                    .invoke("getSchoolBuilding", int.class)
-                                    .args(school.id)
-                                    .callback(new ModelDataListener<Building>() {
-                                        @Override
-                                        public void onSuccess(Building building) {
-                                            SchoolBuilding schoolBuilding = new SchoolBuilding();
-                                            schoolBuilding.school = school;
-                                            schoolBuilding.setBuilding(building);
-
-                                            schoolsViewModel.addItem(schoolBuilding);
-                                        }
-
-                                        @Override
-                                        public void onFailure() {
-
-                                        }
-                                    }).execute();
-                        }
-                        viewModelSchoolBuildingViewModelDataListener.onSuccess(schoolsViewModel);
+                    public void onSuccess(Building building) {
+                        SchoolBuilding schoolBuilding = new SchoolBuilding();
+                        schoolBuilding.school = school;
+                        schoolBuilding.setBuilding(building);
+                        modelDataListener.onSuccess(schoolBuilding);
                     }
 
                     @Override
                     public void onFailure() {
-                        viewModelSchoolBuildingViewModelDataListener.onFailure();
+                        modelDataListener.onFailure();
                     }
                 }).execute();
+    }
+    public void getSchools(final ModelDataListener<List<School>> modelDataListener) {
+        new SimpleQuery<List<School>>()
+                .with(this)
+                .invoke("getSchools")
+                .callback(modelDataListener).execute();
     }
 
     public void search(final String text, final ViewModelDataListener<SearchResultsViewModel, PlaceSuggestionViewModel> viewModelPlaceSuggestionViewModelViewModelDataListener) {

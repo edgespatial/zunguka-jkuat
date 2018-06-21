@@ -41,8 +41,6 @@ public class MapTools {
         this.mapboxMap = mapboxMap;
         this.context = context;
         this.mapView = mapView;
-        mapboxMap.setMinZoomPreference(MIN_ZOOM);
-        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Settings.getInitialPosition(context)), DEFAULT_ZOOM));
     }
 
     public MapboxMap getMapboxMap() {
@@ -50,6 +48,8 @@ public class MapTools {
     }
 
     public void initialize() {
+        mapboxMap.setMinZoomPreference(MIN_ZOOM);
+        mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Settings.getInitialPosition(context)), DEFAULT_ZOOM));
         updateMapStyle();
         drawBoundary();
     }

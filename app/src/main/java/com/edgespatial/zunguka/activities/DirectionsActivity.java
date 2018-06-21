@@ -128,6 +128,9 @@ public class DirectionsActivity extends ToolbarActivity implements ObservableRec
                 zungukaCache.with(DirectionsActivity.this);
                 SearchHistory searchHistory = zungukaCache.get(SearchHistory.class);
 
+                if (searchHistory == null) {
+                    searchHistory = new SearchHistory();
+                }
                 searchHistory.add(start);
                 searchHistory.add(destination);
 

@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Html;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -171,6 +172,18 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
         switchFragments(savedInstanceState == null ? 0 : savedInstanceState.getInt(EXTRA_CURRENT_FRAGMENT, 0));
         getDrawer().addDrawerListener(this);
         initializeSatelliteSwitch();
+
+        floatingSearchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
+            @Override
+            public void onActionMenuItemSelected(MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.action_restore_map:
+                        mapTools.initialize();
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -318,7 +331,7 @@ public class MainActivity extends DrawerActivity implements OnMapReadyCallback, 
     protected void onResume() {
         super.onResume();
         NavigationView navigationView = findViewById(navigationViewId());
-        if(navigationView.getMenu().findItem(R.id.nav_directions).isChecked()){
+        if (navigationView.getMenu().findItem(R.id.nav_directions).isChecked()) {
             switchFragments(currentFragmentIndex);
         }
     }
